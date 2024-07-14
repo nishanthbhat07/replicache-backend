@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Todo {
+  id        Int     @id @default(autoincrement())
+  title     String
+  completed Boolean @default(false)
+}
+
+model ReplicacheClient {
+  id             String                     @id
+  lastMutationID Int
+  lastPulled     DateTime?
+  mutations      ReplicacheClientMutation[]
+  version        Int
+  lastModified   DateTime
+  clientGroupID  String
+
+  @@index([clientGroupID, version])
+}
+
+model ReplicacheClientMutation {
+  id        Int
+  clientID  String
+  version   Int
+  mutation  String
+  createdAt DateTime         @default(now())
+  client    ReplicacheClient @relation(fields: [clientID], references: [id])
+
+  @@id([clientID, id])
+}
+
+model ReplicacheSpace {
+  id           String            @id
+  version      Int
+  lastModified DateTime
+  entries      ReplicacheEntry[]
+}
+
+model ReplicacheEntry {
+  spaceID      String
+  key          String
+  value        String
+  deleted      Boolean
+  version      Int
+  lastModified DateTime
+  space        ReplicacheSpace @relation(fields: [spaceID], references: [id])
+
+  @@unique([spaceID, key])
+  @@index([spaceID])
+  @@index([deleted])
+  @@index([version])
+}
+
+model ReplicacheMeta {
+  key   String @id
+  value Json
+}
