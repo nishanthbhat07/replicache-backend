@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import path from 'path';
-import {mutators} from 'shared';
+import {mutators} from './mutators';
 import {fileURLToPath} from 'url';
 import express from 'express';
 import type Express from 'express';
