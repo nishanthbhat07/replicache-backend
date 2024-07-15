@@ -40,8 +40,8 @@ export const mutators = {
     await tx.set(`todo/${next.id}`, next);
   },
 
-  deleteTodo: async (tx: WriteTransaction, id: string) => {
-    await tx.del(`todo/${id}`);
+  deleteTodo: async (tx: WriteTransaction, id: {id:string}) => {
+    await tx.del(`todo/${id.id}`);
   },
 
   // This mutator creates a new todo, assigning the next available sort value.

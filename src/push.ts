@@ -98,9 +98,9 @@ export async function push<M extends MutatorDefs>(
         console.error(`Unknown mutator: ${mutation.name} - skipping`);
       }
 
+
       try {
         await mutator(tx, mutation.args);
-        console.log("Line103", )
       } catch (e) {
         console.error(
           `Error executing mutator: ${JSON.stringify(mutator)}: ${e}`,

@@ -26,6 +26,7 @@ interface IValue{
   title:string;
   id?: number|string,
   completed?: boolean
+  deleted?:boolean
 }
 
 export async function putEntry(
@@ -35,22 +36,29 @@ export async function putEntry(
   value: JSONValue,
   version: number,
 ): Promise<void> {
-  console.log("value",typeof value)
+  console.log("value",value, key)
   const data=value as unknown as IValue;
+
+  const {id}= await executor.todo.upsert({
+    where:{
+      id: Number(key.split("/")[1]) || 1
+    },
+    update:{
+      completed: data?.completed,
+      deleted: data?.deleted
+    },
+    create:{
+      title: data?.title ,
+    }
+  })
   await Promise.all([
-    executor.todo.create({  
-      data:{
-        title: data?.title ,
-      }
-    })
-    ,
     executor.replicacheEntry.upsert({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       where: { spaceID_key: { spaceID, key } }, // Composite unique key defined in the Prisma schema
       create: {
         spaceID,
-        key,
-        value: JSON.stringify(value),
+        key: `todo/${id}`,
+        value: JSON.stringify({...value as Record<string,never>, id}),
         deleted: false,
         version,
         lastModified: new Date(),
@@ -72,17 +80,25 @@ export async function delEntry(
   version: number,
 ): Promise<void> {
   console.log("Line45", JSON.stringify(key,null,2))
-  await executor.replicacheEntry.updateMany({
-    where: {
-      spaceID,
-      key,
-    },
-    data: {
-      deleted: true,
-      version,
-      lastModified: new Date(), // Optionally update lastModified timestamp
-    },
-  });
+  await Promise.all([
+    executor.todo.update({
+      where:{id: Number(key.split("/")[1])},
+      data:{
+        deleted:true
+      }
+    }),
+    executor.replicacheEntry.updateMany({
+      where: {
+        spaceID,
+        key,
+      },
+      data: {
+        deleted: true,
+        version,
+        lastModified: new Date(), // Optionally update lastModified timestamp
+      },
+    })
+  ])
 
 }
 
@@ -135,11 +151,6 @@ export async function getChangedEntries(
     },
   });
   console.log("result", entries)
-  // return result
-  // const {rows} = await executor(
-  //   `select key, value, deleted from replicache_entry where spaceid = $1 and version > $2`,
-  //   [spaceID, prevVersion],
-  // );
   return entries.map(row => [row.key, JSON.parse(row.value), row.deleted]);
 }
 
@@ -148,8 +159,12 @@ export async function createSpace(
   spaceID: string,
 ): Promise<void> {
   console.log('creating space', spaceID);
-  await executor.replicacheSpace.create({
-    data: {
+  await executor.replicacheSpace.upsert({
+    where: { id: spaceID },
+    update:{
+      lastModified: new Date(),
+    },
+    create: {
       id: spaceID,
       version: 0,
       lastModified: new Date(),

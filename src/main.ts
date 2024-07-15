@@ -8,6 +8,8 @@ import {handleRequest} from '../endpoints/handle-request.js';
 
 import fs from 'fs';
 import {handlePoke} from '../endpoints/handle-poke';
+import morgan from 'morgan'
+import { handleReadRequest } from '../endpoints/handle-read-request';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const portEnv = parseInt(process.env.PORT || '');
@@ -32,6 +34,7 @@ const errorHandler = (
   next(err);
 };
 
+app.use(morgan("dev"))
 app.use(express.urlencoded({extended: true}), express.json(), errorHandler);
 
 app.post(
@@ -50,6 +53,12 @@ app.get(
     await handlePoke(req, res);
   },
 );
+
+app.get('/api/replicache/createSpace',async (  _req: Express.Request,
+  res: Express.Response,
+  next: Express.NextFunction,)=>{
+    await handleReadRequest(res,next);
+  })
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(default_dist));
