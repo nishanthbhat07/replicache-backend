@@ -98,9 +98,9 @@ export async function push<M extends MutatorDefs>(
         console.error(`Unknown mutator: ${mutation.name} - skipping`);
       }
 
+
       try {
         await mutator(tx, mutation.args);
-        console.log("Line103", )
       } catch (e) {
         console.error(
           `Error executing mutator: ${JSON.stringify(mutator)}: ${e}`,
@@ -110,6 +110,7 @@ export async function push<M extends MutatorDefs>(
       lastMutationIDs[clientID] = expectedMutationID;
       console.log('Processed mutation in', Date.now() - t1);
     }
+    console.log("spaceID1234",spaceID)
 
     await Promise.all([
       setLastMutationIDs(executor, clientGroupID, lastMutationIDs, nextVersion),

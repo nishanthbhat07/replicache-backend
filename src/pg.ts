@@ -2,7 +2,7 @@
 
 
 // const pool = getPool();
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient , Prisma} from '@prisma/client';
 
 // async function getPool() {
 //   const global = globalThis as unknown as {
@@ -162,6 +162,10 @@ async function transactWithExecutor<R>(prisma: PrismaClient, body:TransactionBod
     try {
       return await prisma.$transaction(async (prisma) => {
         return await body(prisma as PrismaClient);
+      },{
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       });
     } catch (e) {
       if (shouldRetryTransaction(e)) {
