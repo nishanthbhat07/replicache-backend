@@ -3,6 +3,7 @@
 import type {JSONValue} from 'replicache';
 import {z} from 'zod';
 import type { PrismaClient } from '@prisma/client';
+import { createIssue, deleteIssue, updateIssue } from './github-issues';
 
 export async function getEntry(
   executor: PrismaClient,
@@ -38,17 +39,34 @@ export async function putEntry(
 ): Promise<void> {
   console.log("value",value, key)
   const data=value as unknown as IValue;
+  const result = await executor.todo.findUnique({
+    where:{
+      id: Number(key.split("/")[1]) || 1
+    }
+  })
+  console.log("Line47", result, typeof result?.id, !result?.id)
+  // if(result?.deleted) return;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const {issueNumber, github_node_id}= !result?.id ? await createIssue({title:data.title, labels:["bug"]}) 
+  : await updateIssue({
+    title:data?.title, 
+    issueNumber: Number(result?.githubIssueNumber).toString(), 
+    state: data?.completed ? "closed" : "open"
+  })
 
   const {id}= await executor.todo.upsert({
     where:{
       id: Number(key.split("/")[1]) || 1
     },
     update:{
+      title: data?.title || result?.title,
       completed: data?.completed,
       deleted: data?.deleted
     },
     create:{
       title: data?.title ,
+      githubIssueNumber: issueNumber,
+      githubNodeId: github_node_id,
     }
   })
   await Promise.all([
@@ -80,7 +98,7 @@ export async function delEntry(
   version: number,
 ): Promise<void> {
   console.log("Line45", JSON.stringify(key,null,2))
-  await Promise.all([
+ const [result]= await Promise.all([
     executor.todo.update({
       where:{id: Number(key.split("/")[1])},
       data:{
@@ -99,6 +117,8 @@ export async function delEntry(
       },
     })
   ])
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  await deleteIssue({node_id : result?.githubNodeId})
 
 }
 
