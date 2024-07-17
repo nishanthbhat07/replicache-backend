@@ -2,6 +2,7 @@
   "name": "server",
   "version": "0.1.0",
   "private": true,
+  "main": "./src/main.ts",
   "dependencies": {
     "@prisma/client": "^5.16.2",
     "axios": "^1.7.2",
@@ -39,7 +40,7 @@
     "format": "prettier --write './src/**/*.{js,jsx,json,ts,tsx,html,css,md}' '*.{cjs,js,jsx,json,ts,tsx,html,css,md}'",
     "check-format": "prettier --check './src/**/*.{js,jsx,json,ts,tsx,html,css,md}' '*.{cjs,js,jsx,json,ts,tsx,html,css,md}'",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
-    "build": "rm -rf ./dist && tsc",
+    "build": "rm -rf ./dist && tsc && prisma generate",
     "build-server": "prisma generate",
     "check-types": "tsc --noEmit",
     "dev": "nodemon",
