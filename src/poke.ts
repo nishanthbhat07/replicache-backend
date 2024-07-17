@@ -39,7 +39,7 @@ export class PokeBackend {
     }
     for (const listener of set) {
       try {
-        listener();
+        listener?.();
       } catch (e) {
         console.error(e);
       }

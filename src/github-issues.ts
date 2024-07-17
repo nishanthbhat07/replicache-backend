@@ -148,5 +148,6 @@ export const handleSyncIusses= async (req: Express.Request, res: Express.Respons
     catch(e){
         // throw new Error("CANNOT SYNC\n"+e);
         console.log("Errrr", e);
+       return res.status(250)
     }
 }
