@@ -40,7 +40,8 @@ export const createIssue=async ({title, labels}:{title:string, labels:string[]})
          console.info("CREATED ISSUE")
     }
     catch(e){
-        throw new Error("ERROR while creating issue\n"+e)
+        // throw new Error("ERROR while creating issue\n"+e)
+        console.log("Errrr", e);
     }
 
     return {response:response?.data,issueNumber: response?.data?.number, github_node_id:response?.data?.node_id}
@@ -57,7 +58,8 @@ export const updateIssue=async ({title, issueNumber, state}:{title:string, issue
         //  console.log("Line54", response)
     }
     catch(e){
-        throw new Error("ERROR while updating issue\n"+e)
+        // throw new Error("ERROR while updating issue\n"+e)
+        console.log("Errrr", e);
     }
 
    return {response:response?.data, issueNumber: response?.data?.number, github_node_id: response?.data?.node_id}
@@ -86,7 +88,8 @@ export const deleteIssue=async ({node_id}:{node_id:string | null |undefined, })=
          console.info("DELETED ISSUE")
     }
     catch(e){
-        throw new Error("ERROR while delete issue\n"+e)
+        // throw new Error("ERROR while delete issue\n"+e)
+        console.log("Errrr", e);
     }
 
     return {response: response.data?.data?.deleteIssue?.clientMutationId}
@@ -143,6 +146,7 @@ export const handleSyncIusses= async (req: Express.Request, res: Express.Respons
         return res.status(204);
     }
     catch(e){
-        throw new Error("CANNOT SYNC\n"+e);
+        // throw new Error("CANNOT SYNC\n"+e);
+        console.log("Errrr", e);
     }
 }
