@@ -40,6 +40,7 @@
     "check-format": "prettier --check './src/**/*.{js,jsx,json,ts,tsx,html,css,md}' '*.{cjs,js,jsx,json,ts,tsx,html,css,md}'",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "build": "rm -rf ./dist && tsc",
+    "build-server": "prisma generate",
     "check-types": "tsc --noEmit",
     "dev": "nodemon",
     "prod": "NODE_ENV=production node --loader ts-node/esm  --experimental-specifier-resolution=node ./src/main.ts",
