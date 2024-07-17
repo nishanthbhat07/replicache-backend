@@ -41,7 +41,7 @@
 	- Update a Todo (Update title of a  github issue)
 	- Delete a todo (Delete a github issue)
 	- Completed todo/github issues
-5. For now, the sync happens only one way; i.e. when an user creates an issue from the app, it reflects in the issues section of the repo but vice versa capability is not there for now
+5. For now, the sync happens in this way: when an user creates an issue from the app, it reflects in the issues section of the repo in github issues but the user can't create new issue from github. That won't be visible on app. But if the issue is already created from the app and the user updates the issue from github then it'll get updated.
 
 
 Prisma Schema
