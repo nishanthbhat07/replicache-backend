@@ -1,7 +1,7 @@
 import {nanoid} from 'nanoid';
 import type Express from 'express';
-import { transact } from '../src/pg.js';
-import { getCookie, createSpace } from "../src/data.js";
+import { transact } from '../pg.js';
+import { getCookie, createSpace } from "../data.js";
 
 export async function handleCreateSpace(
   req: Express.Request,
@@ -21,7 +21,7 @@ export async function handleCreateSpace(
     });
     res.status(200).send({ spaceID });
   } catch (e: any) {
-    next(Error(`Failed to create space ${spaceID}`, e));
+    next(Error(`Failed to create space ${spaceID} ${e}`));
   }
 }
 
@@ -37,6 +37,6 @@ export async function handleSpaceExist(
     const exists = cookie !== undefined;
     res.status(200).send({ spaceExists: exists });
   } catch (e: any) {
-    next(Error(`Failed to check space exists ${req.body.spaceID}`, e));
+    next(Error(`Failed to check space exists ${req.body.spaceID}\n ${e}`));
   }
 }

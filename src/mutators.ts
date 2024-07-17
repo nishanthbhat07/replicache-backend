@@ -24,9 +24,10 @@
 // See https://doc.replicache.dev/how-it-works#sync-details for all the detail
 // on how Replicache syncs and resolves conflicts, but understanding that is not
 // required to get up and running.
-
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore
 import type {WriteTransaction} from 'replicache';
-import {Todo, listTodos, TodoUpdate} from './todo';
+import {Todo, listTodos, TodoUpdate} from './todo.js';
 
 export type M = typeof mutators;
 

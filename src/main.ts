@@ -1,16 +1,16 @@
 import 'dotenv/config';
 import path from 'path';
-import {mutators} from './mutators';
+import {mutators} from './mutators.js';
 import {fileURLToPath} from 'url';
 import express from 'express';
 import type Express from 'express';
-import {handleRequest} from '../endpoints/handle-request.js';
+import {handleRequest} from './endpoints/handle-request.js';
 
 import fs from 'fs';
-import {handlePoke} from '../endpoints/handle-poke';
+import {handlePoke} from './endpoints/handle-poke.js';
 import morgan from 'morgan'
-import { handleReadRequest } from '../endpoints/handle-read-request';
-import { handleSyncIusses } from './github-issues';
+import { handleReadRequest } from './endpoints/handle-read-request.js';
+import { handleSyncIusses } from './github-issues.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const portEnv = parseInt(process.env.PORT || '');

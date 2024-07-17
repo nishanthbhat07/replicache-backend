@@ -2,22 +2,26 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "./src",
+    "allowJs": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "allowJs": true,
-    // esnext for Object.fromEntries
-    "lib": ["dom", "DOM.Iterable", "esnext"],
     "preserveSymlinks": true,
-    "types": ["node"]
+    "declaration": true,
+    "types": ["node"],
   },
-  "include": ["**/src/**/*.ts", "**/endpoints/**/*.ts"],
-  "exclude": ["node_modules", "lib"]
+  "include": [
+    "./src/**/*.ts",
+    "./src/endpoints/**/*.ts" // Adjust if needed
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ],
 }

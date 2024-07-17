@@ -1,5 +1,5 @@
 import type Express from 'express';
-import {pull} from '../src/pull.js';
+import {pull} from '../pull.js';
 
 export async function handlePull(
   req: Express.Request,

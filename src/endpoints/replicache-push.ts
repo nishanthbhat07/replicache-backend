@@ -1,5 +1,5 @@
 import type {MutatorDefs} from 'replicache';
-import {push} from '../src/push.js';
+import {push} from '../push.js';
 
 import type Express from 'express';
 

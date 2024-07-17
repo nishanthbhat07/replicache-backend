@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore
 import type {JSONValue} from 'replicache';
 import type {Storage} from 'replicache-transaction';
 import {putEntry, getEntry, delEntry, getEntries} from './data.js';

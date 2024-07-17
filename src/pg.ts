@@ -1,6 +1,5 @@
 // Low-level config and utilities for Postgres.
 
-
 // const pool = getPool();
 import { PrismaClient , Prisma} from '@prisma/client';
 

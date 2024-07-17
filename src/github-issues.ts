@@ -2,7 +2,7 @@
 import axios from "axios"
 import { z } from "zod"
 import type Express from "express"
-import { transact } from "./pg"
+import { transact } from "./pg.js"
 
 const BASEURL=process.env.GITHUB_API_BASEURL
 

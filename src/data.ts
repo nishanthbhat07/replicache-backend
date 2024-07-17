@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
 import type {JSONValue} from 'replicache';
 import {z} from 'zod';
 import type { PrismaClient } from '@prisma/client';
-import { createIssue, deleteIssue, updateIssue } from './github-issues';
+import { createIssue, deleteIssue, updateIssue } from './github-issues.js';
 
 export async function getEntry(
   executor: PrismaClient,

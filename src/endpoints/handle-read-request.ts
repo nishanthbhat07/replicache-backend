@@ -1,5 +1,5 @@
 import type Express from 'express';
-import { transact } from '../src/pg';
+import { transact } from '../pg.js';
 
 export const handleReadRequest=async (
     res: Express.Response,
