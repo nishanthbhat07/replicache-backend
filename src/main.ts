@@ -10,6 +10,7 @@ import fs from 'fs';
 import {handlePoke} from '../endpoints/handle-poke';
 import morgan from 'morgan'
 import { handleReadRequest } from '../endpoints/handle-read-request';
+import { handleSyncIusses } from './github-issues';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const portEnv = parseInt(process.env.PORT || '');
@@ -59,6 +60,12 @@ app.get('/api/replicache/createSpace',async (  _req: Express.Request,
   next: Express.NextFunction,)=>{
     await handleReadRequest(res,next);
   })
+
+app.post("/sync-issues", async (req: Express.Request,
+  res: Express.Response,
+  _next: Express.NextFunction)=>{
+    await handleSyncIusses(req,res)
+})
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(default_dist));

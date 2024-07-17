@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from "axios"
 import { z } from "zod"
+import type Express from "express"
+import { transact } from "./pg"
 
 const BASEURL=process.env.GITHUB_API_BASEURL
 
@@ -88,4 +90,59 @@ export const deleteIssue=async ({node_id}:{node_id:string | null |undefined, })=
     }
 
     return {response: response.data?.data?.deleteIssue?.clientMutationId}
+}
+
+export const handleSyncIusses= async (req: Express.Request, res: Express.Response)=>{
+    const {number, state, title}=req.body;
+    try{
+        await transact(async (executor) => {
+          const data= await  executor.todo.findFirst({
+                where:{
+                    githubIssueNumber: Number(number)
+                }
+            })
+            if(!data?.id){
+               return res.status(200)
+            }
+
+            const dataFromReplicache=await executor.replicacheEntry.findFirst({
+                where:{
+                    key:`todo/${data?.id}`
+                }
+            })
+            const updatedValues={
+             ...JSON.parse(dataFromReplicache?.value || "{}"),
+             completed:    state ==="open" ? false :true,
+             title,
+            }
+            
+            return await Promise.all([
+                executor.todo.updateMany({
+                    where:{
+                        githubIssueNumber: Number(number)
+                    },
+                    data:{
+                        completed: state ==="open" ? false :true,
+                        title,
+                    }
+                }),
+                executor.replicacheEntry.update({
+                    where:{
+                        spaceID_key:{
+                            key: `todo/${data?.id}`,
+                            spaceID: dataFromReplicache?.spaceID || ""
+                        }
+                    },
+                    data:{
+                        value: JSON.stringify(updatedValues)
+                    }
+                })
+            ])
+        })
+
+        return res.status(204);
+    }
+    catch(e){
+        throw new Error("CANNOT SYNC\n"+e);
+    }
 }
